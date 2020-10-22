@@ -1,0 +1,63 @@
+<delimiter> := SPACE | TAB
+
+<statement-list> := <statement-list><statement> 
+                  | <statement>
+
+<statement> := <declaration> 
+             | <assignment>
+
+<declaration> := DECLARE LIST OF <variable-list> COLON <type>
+               | DECLARE <variable> COLON <type>
+
+<variable-list> := <variable> | <variable> <delimiter> <variable-list>
+
+<type> := <primitive-type> | <array>
+
+<primitive-type> := INT | REAL | BOOLEAN
+
+<array> := <rectangular_array> | <jagged_array>
+
+<rectangular-array> := ARRAY <enumeration-list> OF INT
+
+<enumeration-list> := <enumeration-list><enumeration> | <enumeration>
+
+<enumeration> := <static_enumeration> | <dynamic_enumeration>
+
+<static_enumeration> := OPBRACKET CONSTANT   TO CONSTANT   CLBRACKET
+
+<dynamic_enumeration>:= OPBRACKET <variable> TO <variable> CLBRACKET
+                      | OPBRACKET CONSTANT   TO <variable> CLBRACKET
+                      | OPBRACKET <variable> TO CONSTANT   CLBRACKET
+
+<jagged_array> := JAGGED ARRAY <enumeration-list> OPBRACKET CLBRACKET 
+
+
+
+<assignment> := <variable> ASSIGNED <expression>
+
+<operator> := <boolean_operator> | <arithemetic_operator>
+
+<boolean_operator> := AND 
+                    | OR
+
+<arithemetic_operator> := MULTIPLY 
+                        | DIVIDE
+                        | PLUS
+                        | MINUS
+
+<expression> := <boolean_expression> | <arithemetic_expression>
+
+<term> := <boolean_term> | <arithemetic_term>
+
+<earithemetic_expression> := <static_enumerationarithemetic_expression> PLUS |              
+                            <dynamic_enumeratioarithemetic_expressionn>
+                          | <arithemetic_expression> MINUS             
+                            <arithemetic_expression>
+                          | <arithemetic_term>
+
+<arithemetic_term> := OPPARANTHESIS <arithemetic_expression> CLPARENTHESIS
+                    | <term> MULTIPLY <term>
+                    | <term> DIVIDE <term>
+                    | <variable>
+                    | CONSTANT
+
