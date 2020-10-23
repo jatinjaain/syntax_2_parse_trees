@@ -1,11 +1,14 @@
 /*
- * declares and initialses variables and tokens as strings
+ * declares and initialses important variable and strings
  * 
 */
 
-//tokens
+#include <grammar_definitions.h>
+
+//terminals
+char IDENTIFIER[] = "identifier";
+char KEYWORD[] = "keyword";
+char CONSTANT[] = "constant";
 
 
-
-//variables
 
