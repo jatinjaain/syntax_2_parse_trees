@@ -5,6 +5,7 @@
 #define MAX_NAME_LEN 50 //maximum length of names of tokens, variables
 #define MAX_VALUE_LEN 50 //maximum length of value of tokens
 #define MAX_RULES_NUM 100 //maximum number of rules
+#define MAX_CAPACITY_STACK 20 //maximum capacity of stack
 
 /* Represents variables/tokens in grammar
  *
@@ -23,11 +24,11 @@
  * next_node: next node in a rule for right tokens and variables and first right variable/token for single left variable 
 */
 typedef struct Grammar_Node{
-    int node_type;
     char name[MAX_NAME_LEN];
     char value[MAX_VALUE_LEN];
     int num_of_nodes;
     struct Grammar_Node* next_node;
+    struct Grammar_Node* prev_node;
 } Grammar_Node;
 
 /* Represents grammar
@@ -56,6 +57,7 @@ typedef struct Token{
     char value[MAX_VALUE_LEN];
     int line_num;
     struct Token* next_node;
+    struct Token* prev_node;
 } Token;
 
 /*
@@ -73,5 +75,5 @@ typedef struct Parse_Tree{
     char name[MAX_NAME_LEN];
     char value[MAX_VALUE_LEN];
     int num_of_children;
-    Parse_Tree* children;
+    Parse_Tree** children; //array of children
 } Parse_Tree;
