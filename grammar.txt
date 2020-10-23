@@ -1,0 +1,88 @@
+<program> := PROGRAM OPBRACE <statement-list> CLBRACE
+
+<statement-list> := <statement-list><statement> 
+                  | <statement>
+
+<statement> := <declaration> 
+             | <assignment>
+
+<declaration> := DECLARE LIST OF <variable-list> COLON <type>
+               | DECLARE <variable> COLON <type>
+
+<variable-list> := <variable> 
+                 | <variable><variable-list>
+
+<type> := <primitive_type> 
+        | <array>
+
+<primitive_type> := <INTEGER> 
+                  | <REAL> 
+                  | <BOOLEAN>
+
+<array> := <rectangular_array> 
+         | <jagged_array>
+
+<rectangular_array> := ARRAY <enumeration-list> OF <INTEGER>
+
+<enumeration-list> := <enumeration-list><enumeration> 
+                    | <enumeration>
+
+<enumeration> := <static_enumeration> 
+               | <dynamic_enumeration>
+
+<static_enumeration> := OPBRACKET <CONSTANT> TO <CONSTANT> CLBRACKET
+
+<dynamic_enumeration> := OPBRACKET <variable> TO <variable> CLBRACKET
+                       | OPBRACKET <CONSTANT> TO <variable> CLBRACKET
+                       | OPBRACKET <variable> TO <CONSTANT> CLBRACKET
+
+<jagged_array> := JAGGED ARRAY <static_enumeration><brackets><row-list>
+
+<brackets> := OPBRACKET CLBRACKET
+            | OPBRACKET CLBRACKET OPBRACKET CLBRACKET
+
+<row-list> := <row-list><row>
+            | <row>
+
+<row> := R1 OPBRACKET <CONSTANT> CLBRACKET COLON SIZE <CONSTANT> COLON    
+         VALUES OPBRACE <constant-list> CLBRACE
+
+<constant-list> := <constant-list> SEMICOLON <constants>
+
+<constants> := <constants><CONSTANT>
+             | <CONSTANT>
+
+<assignment> := <variable> ASSIGNED <expression>
+
+<operator> := <boolean_operator> 
+            | <arithemetic_operator>
+
+<boolean_operator> := <AND> 
+                    | <OR>
+
+<arithemetic_operator> := <MULTIPLY> 
+                        | <DIVIDE>
+                        | <PLUS>
+                        | <MINUS>
+
+<expression> := <boolean_expression> 
+              | <arithemetic_expression>
+
+<term> := <boolean_term> 
+        | <arithemetic_term>
+<boolean_expression> := <boolean_expression><OR><boolean_expression>
+                      | <boolean_term>
+
+<boolean_term> := OPPARANTHESIS <boolean_term> CLPARENTHESIS
+                | <boolean_term><AND><boolean_term>
+                | <variable>
+
+<arithemetic_expression> := <arithemetic_expression><PLUS><arithemetic_expression>
+                          | <arithemetic_expression><MINUS><arithemetic_expression>
+                          | <arithemetic_term>
+
+<arithemetic_term> := OPPARANTHESIS <arithemetic_expression> CLPARENTHESIS
+                    | <arithemetic_term><MULTIPLY><arithemetic_term>
+                    | <arithemetic_term><DIVIDE><arithemetic_term>
+                    | <variable>
+                    | <CONSTANT>
