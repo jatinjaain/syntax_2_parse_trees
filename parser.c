@@ -18,6 +18,21 @@
 Grammar* grammar;
 
 //Stack
+/*
+ * stack that will be utilised in parsing algorithm (see parsingAlgorithm at draw.io)
+*/
+typedef struct Stack_Element{
+    Token* current;
+    int current_len;
+    Parse_Tree* subtree;
+} Stack_Element;
+
+// stack that will be used in the parsing algorithm
+typedef struct Stack{
+    int index;
+    Stack_Element elements[MAX_CAPACITY_STACK];
+} Stack;
+
 void push(Stack* s,Stack_Element* se){
     s->elements[s->index++] = *se;
 }

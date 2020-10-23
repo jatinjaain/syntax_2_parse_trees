@@ -28,6 +28,7 @@ typedef struct Grammar_Node{
     char value[MAX_VALUE_LEN];
     int num_of_nodes;
     struct Grammar_Node* next_node;
+    struct Grammar_Node* prev_node;
 } Grammar_Node;
 
 /* Represents grammar
@@ -56,6 +57,7 @@ typedef struct Token{
     char value[MAX_VALUE_LEN];
     int line_num;
     struct Token* next_node;
+    struct Token* prev_node;
 } Token;
 
 /*
@@ -75,18 +77,3 @@ typedef struct Parse_Tree{
     int num_of_children;
     Parse_Tree** children; //array of children
 } Parse_Tree;
-
-/*
- * stack that will be utilised in parsing algorithm (see parsingAlgorithm at draw.io)
-*/
-typedef struct Stack_Element{
-    Token* current;
-    int current_len;
-    Parse_Tree* subtree;
-} Stack_Element;
-
-// stack that will be used in the parsing algorithm
-typedef struct Stack{
-    int index;
-    Stack_Element elements[MAX_CAPACITY_STACK];
-} Stack;
