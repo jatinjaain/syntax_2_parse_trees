@@ -137,7 +137,7 @@ Parse_Result Parse(Token* starting_node, Label label, int length){
                     l = popped.current_len+1;
                     rn = rn->prev_node;
                     Parse_Tree* temp_tree = popped.subtree;
-                    while(l==l-grammar->rules[i].num_of_nodes-stack.index){
+                    while(l==l - grammar->rules[i].num_of_nodes + 1){
                         delete_subtree(temp_tree,1);
                         if(stack.index==0){
                             res.match = false;
@@ -146,7 +146,7 @@ Parse_Result Parse(Token* starting_node, Label label, int length){
                         else{
                             popped = pop(&stack);
                             t = popped.current;
-                            tokens_parsed -= l;
+                            tokens_parsed -= popped.current_len;
                             l = popped.current_len+1;
                             rn = rn->prev_node; 
                             temp_tree = popped.subtree;
@@ -176,7 +176,7 @@ Parse_Result Parse(Token* starting_node, Label label, int length){
             }
 
             if(!temp_pr.match){ 
-                while(l==length - grammar->rules[i].num_of_nodes - stack.index){
+                while(l==length - grammar->rules[i].num_of_nodes +1){
                     delete_subtree(temp_tree,1);
                     if(stack.index==0){
                         res.match = false;
@@ -185,7 +185,7 @@ Parse_Result Parse(Token* starting_node, Label label, int length){
                     else{
                         Stack_Element popped = pop(&stack);
                         t = popped.current;
-                        tokens_parsed -= l;
+                        tokens_parsed -= popped.current_len;
                         l = popped.current_len+1;
                         rn = rn->prev_node; 
                         temp_tree=popped.subtree;

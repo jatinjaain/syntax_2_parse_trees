@@ -3,6 +3,7 @@
  * 
 */
 
+#include "structures.h"
 #include "grammar_definitions.h"
 
 //terminals
