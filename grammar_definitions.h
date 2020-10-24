@@ -9,7 +9,7 @@
 
 //tokens
 
+extern char* IDENTIFIER;
+extern char* KEYWORD;
+extern char* CONSTANT;
 
-
-
-//variables
