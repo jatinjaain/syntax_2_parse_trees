@@ -7,16 +7,8 @@
  *    Detailed in the parsingAlgorithm
 */
 
-#include <structures.h>
-#include <stdbool.h>
-#include <string.h>
-#include <stdlib.h>
-
-#include <grammar_definitions.h>
-
-#define MAX_NAME_LEN 50
-#define MAX_VALUE_LEN 50
-#define MAX_LINES 100
+#include "structures.h"
+#include "grammar_definitions.h"
 
 Grammar* grammar;
 
@@ -53,9 +45,7 @@ void delete_subtree(Parse_Tree* pt, int delete_self){
     if(delete_self == 1) free(pt);
 }
 
-
 //create parse tree
-
 typedef struct Parse_Result{
     bool match;
     Parse_Tree* subtree;
@@ -66,7 +56,12 @@ typedef struct Label{
     char value[MAX_VALUE_LEN];
 } Label;
 
-void createParseTree(Parse_Tree* t, Token* s, Grammar* g){
+Parse_Result Parse(Token*,Label,int);
+bool is_identifier(Token*, Label);
+bool is_keyword(Token*,Label);
+bool is_constant(Token*,Label);
+
+Parse_Tree* createParseTree(Parse_Tree* t, Token* s, Grammar* g){
     s = s->next_node->next_node;//skipping two tokens "program" and "{"
     Parse_Tree* final_parsed_tree;
     final_parsed_tree->children = (Parse_Tree**)malloc(MAX_LINES*sizeof(Parse_Tree*));
@@ -141,8 +136,9 @@ Parse_Result Parse(Token* starting_node, Label label, int length){
                     tokens_parsed -= l;
                     l = popped.current_len+1;
                     rn = rn->prev_node;
-
-                    while(l==grammar->rules[i].num_of_nodes){
+                    Parse_Tree* temp_tree = popped.subtree;
+                    while(l==l-grammar->rules[i].num_of_nodes-stack.index){
+                        delete_subtree(temp_tree,1);
                         if(stack.index==0){
                             res.match = false;
                             return res;
@@ -153,6 +149,7 @@ Parse_Result Parse(Token* starting_node, Label label, int length){
                             tokens_parsed -= l;
                             l = popped.current_len+1;
                             rn = rn->prev_node; 
+                            temp_tree = popped.subtree;
                         }
                     }
                     l++;
@@ -164,6 +161,7 @@ Parse_Result Parse(Token* starting_node, Label label, int length){
             strcpy(temp_l.value,grammar->rules[i].value);
             
             temp_pr = Parse(t,temp_l,l);
+            Parse_Tree* temp_tree = temp_pr.subtree;
 
             if(temp_pr.match){
                 Stack_Element to_push;
@@ -178,7 +176,8 @@ Parse_Result Parse(Token* starting_node, Label label, int length){
             }
 
             if(!temp_pr.match){ 
-                while(l==grammar->rules[i].num_of_nodes){
+                while(l==length - grammar->rules[i].num_of_nodes - stack.index){
+                    delete_subtree(temp_tree,1);
                     if(stack.index==0){
                         res.match = false;
                         return res;
@@ -189,6 +188,7 @@ Parse_Result Parse(Token* starting_node, Label label, int length){
                         tokens_parsed -= l;
                         l = popped.current_len+1;
                         rn = rn->prev_node; 
+                        temp_tree=popped.subtree;
                     }
                 }
                 l++;
@@ -210,6 +210,6 @@ bool is_constant(Token* t, Label l){
     return false;
 }
 bool is_identifier(Token* t, Label l){
-    if(strcmp(t->name,IDENTIFIER) && strcmp(t->value,l.value)) return true;
+    if(strcmp(t->name,IDENTIFIER)) return true;
     return false;
 }

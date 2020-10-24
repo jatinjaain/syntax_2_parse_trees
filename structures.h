@@ -9,6 +9,7 @@
 #define MAX_VALUE_LEN 50 //maximum length of value of tokens
 #define MAX_RULES_NUM 100 //maximum number of rules
 #define MAX_CAPACITY_STACK 20 //maximum capacity of stack
+#define MAX_LINES 100 //max number of lines expected
 
 /*
  * defines common data-structures that will be used by individual files of program

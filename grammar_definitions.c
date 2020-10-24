@@ -3,7 +3,7 @@
  * 
 */
 
-#include <grammar_definitions.h>
+#include "grammar_definitions.h"
 
 //terminals
 char IDENTIFIER[] = "identifier";
