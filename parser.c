@@ -7,12 +7,11 @@
  *    Detailed in the parsingAlgorithm
 */
 
-#include <structures.h>
+#include "structures.h"
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
-
-#include <grammar_definitions.h>
+#include "grammar_definitions.h"
 
 #define MAX_NAME_LEN 50
 #define MAX_VALUE_LEN 50
@@ -53,9 +52,7 @@ void delete_subtree(Parse_Tree* pt, int delete_self){
     if(delete_self == 1) free(pt);
 }
 
-
 //create parse tree
-
 typedef struct Parse_Result{
     bool match;
     Parse_Tree* subtree;
@@ -66,7 +63,12 @@ typedef struct Label{
     char value[MAX_VALUE_LEN];
 } Label;
 
-void createParseTree(Parse_Tree* t, Token* s, Grammar* g){
+Parse_Result Parse(Token*,Label,int);
+bool is_identifier(Token*, Label);
+bool is_keyword(Token*,Label);
+bool is_constant(Token*,Label);
+
+Parse_Tree* createParseTree(Parse_Tree* t, Token* s, Grammar* g){
     s = s->next_node->next_node;//skipping two tokens "program" and "{"
     Parse_Tree* final_parsed_tree;
     final_parsed_tree->children = (Parse_Tree**)malloc(MAX_LINES*sizeof(Parse_Tree*));
@@ -210,6 +212,6 @@ bool is_constant(Token* t, Label l){
     return false;
 }
 bool is_identifier(Token* t, Label l){
-    if(strcmp(t->name,IDENTIFIER) && strcmp(t->value,l.value)) return true;
+    if(strcmp(t->name,IDENTIFIER)) return true;
     return false;
 }
