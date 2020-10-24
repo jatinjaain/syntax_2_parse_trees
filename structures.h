@@ -1,11 +1,19 @@
-/*
- * defines common data-structures that will be used by individual files of program
- * 
-*/
+#ifndef STRUCTURES_H
+#define STRUCTURES_H
+
+#include <stdbool.h>
+#include <string.h>
+#include <stdlib.h>
+
 #define MAX_NAME_LEN 50 //maximum length of names of tokens, variables
 #define MAX_VALUE_LEN 50 //maximum length of value of tokens
 #define MAX_RULES_NUM 100 //maximum number of rules
 #define MAX_CAPACITY_STACK 20 //maximum capacity of stack
+
+/*
+ * defines common data-structures that will be used by individual files of program
+ * 
+*/
 
 /* Represents variables/tokens in grammar
  *
@@ -77,3 +85,5 @@ typedef struct Parse_Tree{
     int num_of_children;
     Parse_Tree** children; //array of children
 } Parse_Tree;
+
+#endif
