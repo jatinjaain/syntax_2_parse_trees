@@ -206,7 +206,7 @@ bool is_keyword(Token* t, Label l){
     return false;
 }
 bool is_constant(Token* t, Label l){
-    if(strcmp(t->name,CONSTANT) && strcmp(t->value,l.value)) return true;
+    if(strcmp(t->name,CONSTANT)) return true;
     return false;
 }
 bool is_identifier(Token* t, Label l){
