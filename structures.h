@@ -1,17 +1,11 @@
 #ifndef STRUCTURES_H
 #define STRUCTURES_H
 
-<<<<<<< HEAD
-#include <stdbool.h>
-#include <string.h>
-#include <stdlib.h>
-=======
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
->>>>>>> grammar
 
 #define MAX_NAME_LEN 50 //maximum length of names of tokens, variables
 #define MAX_VALUE_LEN 50 //maximum length of value of tokens
