@@ -1,10 +1,22 @@
+#ifndef STRUCTURES_H
+#define STRUCTURES_H
+
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
+#include <stdlib.h>
+#include <ctype.h>
+
+#define MAX_NAME_LEN 50 //maximum length of names of tokens, variables
+#define MAX_VALUE_LEN 50 //maximum length of value of tokens
+#define MAX_RULE_LEN 1000 //maximum length of a rule line
+#define MAX_RULES_NUM 100 //maximum number of rules
+#define MAX_CAPACITY_STACK 20 //maximum capacity of stack
+
 /*
  * defines common data-structures that will be used by individual files of program
  * 
 */
-#define MAX_NAME_LEN 50 //maximum length of names of tokens, variables
-#define MAX_VALUE_LEN 50 //maximum length of value of tokens
-#define MAX_RULES_NUM 100 //maximum number of rules
 
 /* Represents variables/tokens in grammar
  *
@@ -23,11 +35,11 @@
  * next_node: next node in a rule for right tokens and variables and first right variable/token for single left variable 
 */
 typedef struct Grammar_Node{
-    int node_type;
     char name[MAX_NAME_LEN];
     char value[MAX_VALUE_LEN];
     int num_of_nodes;
     struct Grammar_Node* next_node;
+    struct Grammar_Node* prev_node;
 } Grammar_Node;
 
 /* Represents grammar
@@ -56,6 +68,7 @@ typedef struct Token{
     char value[MAX_VALUE_LEN];
     int line_num;
     struct Token* next_node;
+    struct Token* prev_node;
 } Token;
 
 /*
@@ -73,5 +86,10 @@ typedef struct Parse_Tree{
     char name[MAX_NAME_LEN];
     char value[MAX_VALUE_LEN];
     int num_of_children;
-    Parse_Tree* children;
+    struct Parse_Tree** children; //array of children
 } Parse_Tree;
+
+char keyword[1000][MAX_VALUE_LEN];    //Array of keywords in the grammar
+int num_of_keywords = 0;
+
+#endif

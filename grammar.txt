@@ -1,63 +1,54 @@
-<delimiter> := SPACE | TAB
-
-<statement-list> := <statement-list><statement> 
-                  | <statement>
-
-<statement> := <declaration> 
-             | <assignment>
-
-<declaration> := DECLARE LIST OF <variable-list> COLON <type>
-               | DECLARE <variable> COLON <type>
-
-<variable-list> := <variable> | <variable> <delimiter> <variable-list>
-
-<type> := <primitive-type> | <array>
-
-<primitive-type> := INT | REAL | BOOLEAN
-
-<array> := <rectangular_array> | <jagged_array>
-
-<rectangular-array> := ARRAY <enumeration-list> OF INT
-
-<enumeration-list> := <enumeration-list><enumeration> | <enumeration>
-
-<enumeration> := <static_enumeration> | <dynamic_enumeration>
-
-<static_enumeration> := OPBRACKET CONSTANT   TO CONSTANT   CLBRACKET
-
-<dynamic_enumeration>:= OPBRACKET <variable> TO <variable> CLBRACKET
-                      | OPBRACKET CONSTANT   TO <variable> CLBRACKET
-                      | OPBRACKET <variable> TO CONSTANT   CLBRACKET
-
-<jagged_array> := JAGGED ARRAY <enumeration-list> OPBRACKET CLBRACKET 
-
-
-
-<assignment> := <variable> ASSIGNED <expression>
-
-<operator> := <boolean_operator> | <arithemetic_operator>
-
-<boolean_operator> := AND 
-                    | OR
-
-<arithemetic_operator> := MULTIPLY 
-                        | DIVIDE
-                        | PLUS
-                        | MINUS
-
-<expression> := <boolean_expression> | <arithemetic_expression>
-
-<term> := <boolean_term> | <arithemetic_term>
-
-<earithemetic_expression> := <static_enumerationarithemetic_expression> PLUS |              
-                            <dynamic_enumeratioarithemetic_expressionn>
-                          | <arithemetic_expression> MINUS             
-                            <arithemetic_expression>
-                          | <arithemetic_term>
-
-<arithemetic_term> := OPPARANTHESIS <arithemetic_expression> CLPARENTHESIS
-                    | <term> MULTIPLY <term>
-                    | <term> DIVIDE <term>
-                    | <variable>
-                    | CONSTANT
-
+<program> := PROGRAM { <statement-list> }
+<statement-list> := <statement> <statement-list> 
+<statement-list> := <statement>
+<statement> := <declaration> ;
+<statement> := <assignment> ;
+<statement> := <row-list>
+<declaration> := DECLARE LIST OF <identifier-list> : <type>
+<declaration> := DECLARE <identifier> : <type>
+<identifier-list> := <identifier> 
+<identifier-list> := <identifier> <identifier-list>
+<type> := <primitive_type> 
+<type> := <array>
+<primitive_type> := INTEGER 
+<primitive_type> := REAL 
+<primitive_type> := BOOLEAN
+<array> := <rectangular_array> 
+<array> := <jagged_array>
+<rectangular_array> := ARRAY <enumeration-list> OF INTEGER
+<enumeration-list> := <enumeration> <enumeration-list> 
+<enumeration-list> := <enumeration>
+<enumeration> := <static_enumeration> 
+<enumeration> := <dynamic_enumeration>
+<static_enumeration> := [ <CONSTANT> .. <CONSTANT> ]
+<dynamic_enumeration> := [ <identifier> .. <identifier> ]
+<dynamic_enumeration> := [ <CONSTANT> .. <identifier> ]
+<dynamic_enumeration> := [ <identifier> .. <CONSTANT> ]
+<jagged_array> := JAGGED ARRAY <static_enumeration><brackets>
+<brackets> := [ ]
+<brackets> := [ ] [ ]
+<row-list> := <row> <row-list>
+<row-list> := <row>
+<row> := R1 [ <CONSTANT> ] : SIZE <CONSTANT> : VALUES { <constant-list> }
+<constant-list> := <constants> ; <constant-list>
+<constant-list> := <constants>
+<constants> := <constants> <CONSTANT>
+<constants> := <CONSTANT>
+<assignment> := <identifier> = <expression>
+<expression> := <boolean_expression> 
+<expression> := <arithmetic_expression>
+<term> := <boolean_term> 
+<term> := <arithmetic_term>
+<boolean_expression> := <boolean_expression> ||| <boolean_expression>
+<boolean_expression> := <boolean_term>
+<boolean_term> := ( <boolean_expression> )
+<boolean_term> := <boolean_term> &&& <boolean_term>
+<boolean_term> := <identifier>
+<arithmetic_expression> := <arithmetic_expression> + <arithmetic_expression>
+<arithmetic_expression> := <arithmetic_expression> - <arithmetic_expression>
+<arithmetic_expression> := <arithmetic_term>
+<arithmetic_term> := ( <arithmetic_expression> )
+<arithmetic_term> := <arithmetic_term> * <arithmetic_term>
+<arithmetic_term> := <arithmetic_term> / <arithmetic_term>
+<arithmetic_term> := <identifier>
+<arithmetic_term> := <CONSTANT>
