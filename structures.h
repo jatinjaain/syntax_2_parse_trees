@@ -1,15 +1,29 @@
 #ifndef STRUCTURES_H
 #define STRUCTURES_H
 
+<<<<<<< HEAD
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
+=======
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
+#include <stdlib.h>
+#include <ctype.h>
+>>>>>>> grammar
 
 #define MAX_NAME_LEN 50 //maximum length of names of tokens, variables
 #define MAX_VALUE_LEN 50 //maximum length of value of tokens
+#define MAX_RULE_LEN 1000 //maximum length of a rule line
 #define MAX_RULES_NUM 100 //maximum number of rules
 #define MAX_CAPACITY_STACK 20 //maximum capacity of stack
 #define MAX_LINES 100 //max number of lines expected
+
+/*
+ * defines common data-structures that will be used by individual files of program
+ * 
+*/
 
 /*
  * defines common data-structures that will be used by individual files of program
@@ -87,4 +101,10 @@ typedef struct Parse_Tree{
     struct Parse_Tree** children; //array of children
 } Parse_Tree;
 
+<<<<<<< HEAD
+=======
+char keyword[1000][MAX_VALUE_LEN];    //Array of keywords in the grammar
+int num_of_keywords = 0;
+
+>>>>>>> grammar
 #endif
