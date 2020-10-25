@@ -4,78 +4,110 @@
  * populates array of linked-list grammar G 
 */
 
-// #include "structures.h"
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <ctype.h>
+#include "structures.h"
 
-// Grammar_Node *readGrammar(char *, Grammar_Node[]);
-// Grammar_Node *readGrammar(char *filename, Grammar_Node G[])
-// {
+bool isterminal(char[]);
+bool isnonterminal(char[]);
+bool iskeyword(char[]);
+void insertGrammarToken(char grammar_token[], Grammar_Node *node);
 
-// 	FILE *fptr = fopen(filename, "r");
-
-// 	if ((fptr) == NULL)
-// 	{
-// 		printf("Error! opening file");
-// 		// Program exits if the file pointer returns NULL.
-// 		exit(1);
-// 	}
-
-// 	G = (Grammar_Node *)malloc(MAX_RULES_NUM * sizeof(Grammar_Node));
-// 	for (int i = 0;; i++)
-// 	{
-// 		char str[MAX_NAME_LEN];
-// 		char next_str[MAX_NAME_LEN];
-// 		fscanf(fptr, "%s", &str[0]);
-// 		if (strcmp(next_str, ":=") == 0)
-// 		{
-// 			//put str in the node
-// 		}
-// 		if (strcmp(str, "|") == 0)
-// 		{
-// 			//put G[i] in the G[i+1]
-// 		}
-
-// 		Grammar_Node *temp = G;
-// 		fclose(fptr);
-// 	}
-// }
-int isterminal(char a[])
+Grammar readGrammar(char *filename, Grammar grammar)
 {
-	if (a[0]=='<')
+	FILE *file = fopen(filename, "r");
+	
+	int counter = 0;
+	while (!feof(file))
+	{
+		grammar.rules[counter].num_of_nodes = 0;
+		char buffer[MAX_RULE_LEN], *grammar_token;
+		fscanf(file, "%[^\n]\n", buffer);
+
+		if (strcmp(buffer, "\n")==0)
+		{
+			continue;
+		}
+
+		grammar_token = strtok(buffer, " ");
+
+		insertGrammarToken(grammar_token, &grammar.rules[counter]);
+		grammar_token = strtok(NULL, " ");
+
+		Grammar_Node *temp = &grammar.rules[counter];
+		while (grammar_token != NULL)
+		{
+			grammar_token = strtok(NULL, " ");
+			if (grammar_token == NULL)
+			{
+				break;
+			}
+
+			temp->next_node = (Grammar_Node *)malloc(sizeof(Grammar_Node));
+			insertGrammarToken(grammar_token, temp->next_node);
+			grammar.rules[counter].num_of_nodes++;
+			temp->next_node->prev_node = temp;
+			temp = temp->next_node;
+		}
+		counter++;
+	}
+	grammar.num_of_rules = counter;
+	return grammar;
+	fclose(file);
+}
+
+void insertGrammarToken(char *grammar_token, Grammar_Node *node)
+{
+	if (isterminal(grammar_token))
+	{
+		grammar_token[strlen(grammar_token) - 1] = '\0';
+		grammar_token++;
+		strcpy(node->name, "terminal");
+	}
+	else if (isnonterminal(grammar_token))
+	{
+		grammar_token[strlen(grammar_token) - 1] = '\0';
+		grammar_token++;
+		strcpy(node->name, "nonterminal");
+	}
+	else if (iskeyword(grammar_token))
+	{
+		strcpy(node->name, "keyword");
+	}
+
+	strcpy(node->value, grammar_token);
+}
+
+bool isterminal(char a[])
+{
+	if (a[0] == '<')
 	{
 		return !(!(isupper(a[1])));
 	}
-	return 0;
+	return false;
 }
-int isnonterminal(char a[])
+
+bool isnonterminal(char a[])
 {
-	if (a[0]=='<')
+	if (a[0] == '<')
 	{
 		return !(isupper((int)a[1]));
 	}
-	return 0;
+	return false;
 }
-int iskeyword(char a[])
+
+bool iskeyword(char a[])
 {
-	if (a[0]!='<')
-		return 1;
+	if (a[0] != '<')
+	{
+		for (size_t i = 0; i < num_of_keywords; i++)
+		{
+			if (strcmp(keyword[i], a) == 0)
+			{
+				return true;
+			}
+		}
+		strcpy(keyword[num_of_keywords++], a);
+		return true;
+	}
 	else
-		return 0;
+		return false;
 }
-// int main()
-// {
-// 	int a = isterminal("<TERMINAL>");
-// 	int b =isterminal("<nonterminal>");
-// 	int c =isterminal("symbol");
-// 	int d =isnonterminal("<TERMINAL>");
-// 	int e =isnonterminal("<nonterminal>");
-// 	int f =isnonterminal("symbol");
-// 	int g =iskeyword("<TERMINAL>");
-// 	int h =iskeyword("<nonterminal>");
-// 	int i =iskeyword("symbol");
-// 	printf("%d %d %d %d %d %d %d %d %d",a,b,c,d,e,f,g,h,i);
-// 	return 0;
-// }
