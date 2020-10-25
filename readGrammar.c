@@ -11,6 +11,8 @@ bool isnonterminal(char[]);
 bool iskeyword(char[]);
 void insertGrammarToken(char grammar_token[], Grammar_Node *node);
 
+int num_of_keywords=0;
+
 Grammar readGrammar(char *filename, Grammar grammar)
 {
 	FILE *file = fopen(filename, "r");

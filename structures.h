@@ -96,6 +96,9 @@ typedef struct Parse_Tree{
 } Parse_Tree;
 
 char keyword[1000][MAX_VALUE_LEN];    //Array of keywords in the grammar
-int num_of_keywords = 0;
 
+extern int num_of_keywords;
+
+Grammar readGrammar(char*,Grammar);
+Parse_Tree* createParseTree(Parse_Tree*,Token*,Grammar*);
 #endif
