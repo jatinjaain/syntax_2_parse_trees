@@ -101,10 +101,7 @@ typedef struct Parse_Tree{
     struct Parse_Tree** children; //array of children
 } Parse_Tree;
 
-<<<<<<< HEAD
-=======
 char keyword[1000][MAX_VALUE_LEN];    //Array of keywords in the grammar
 int num_of_keywords = 0;
 
->>>>>>> grammar
 #endif
