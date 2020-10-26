@@ -71,7 +71,7 @@ void printTokenStream(Token *tok)
 			printf("\n");
 			lines = tok->line_num;
 		}
-		printf("%s ", tok->value);
+		printf("%s/%s ",tok->name ,tok->value);
 		tok = tok->next_node;
 	}
 
