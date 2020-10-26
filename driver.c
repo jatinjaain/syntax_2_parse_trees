@@ -31,8 +31,10 @@ int main()
 			//testing the grammar
 			G = readGrammar("grammar.txt", G);
 			printGrammar(&G);
-			FILE *f = fopen("/mnt/c/Users/bikashjena2304/Desktop/testcases/testcases/t1.txt", "r");
-			
+			break;
+		case 6:
+			G = readGrammar("grammar.txt", G);
+			FILE *f = fopen("./sourcecode.txt", "r");
 			Token *stream = tokenizer(f);
 			printTokenStream(stream);
 			break;
@@ -50,7 +52,7 @@ void printGrammar(Grammar *G)
 		{
 			// printf("%s", k->name);
 			//if(strcmp(G->rules[i].name,KEYWORD)) printf("/%s",G->rules[i].value);
-			printf("%s", k->value);
+			printf("%s/%s", k->name,k->value);
 			printf("\t");
 			k = k->next_node;
 		}

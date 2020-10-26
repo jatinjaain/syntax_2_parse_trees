@@ -51,4 +51,4 @@
 <arithmetic_term> := <arithmetic_term> * <arithmetic_term>
 <arithmetic_term> := <arithmetic_term> / <arithmetic_term>
 <arithmetic_term> := <identifier>
-<arithmetic_term> := <CONSTANT>
+<arithmetic_term> := <constant>
