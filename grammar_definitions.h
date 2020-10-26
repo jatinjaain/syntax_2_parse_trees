@@ -8,8 +8,11 @@
 */
 
 //tokens
+#ifndef GRAMMAR_DEFINITIONS
+#define GRAMMAR_DEFINITIONS
 
+extern char IDENTIFIER[];
+extern char KEYWORD[];
+extern char CONSTANT[];
 
-
-
-//variables
+#endif

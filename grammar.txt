@@ -1,88 +1,54 @@
-<program> := PROGRAM OPBRACE <statement-list> CLBRACE
-
-<statement-list> := <statement-list><statement> 
-                  | <statement>
-
-<statement> := <declaration> 
-             | <assignment>
-
-<declaration> := DECLARE LIST OF <variable-list> COLON <type>
-               | DECLARE <variable> COLON <type>
-
-<variable-list> := <variable> 
-                 | <variable><variable-list>
-
-<type> := <primitive_type> 
-        | <array>
-
-<primitive_type> := <INTEGER> 
-                  | <REAL> 
-                  | <BOOLEAN>
-
-<array> := <rectangular_array> 
-         | <jagged_array>
-
-<rectangular_array> := ARRAY <enumeration-list> OF <INTEGER>
-
-<enumeration-list> := <enumeration-list><enumeration> 
-                    | <enumeration>
-
-<enumeration> := <static_enumeration> 
-               | <dynamic_enumeration>
-
-<static_enumeration> := OPBRACKET <CONSTANT> TO <CONSTANT> CLBRACKET
-
-<dynamic_enumeration> := OPBRACKET <variable> TO <variable> CLBRACKET
-                       | OPBRACKET <CONSTANT> TO <variable> CLBRACKET
-                       | OPBRACKET <variable> TO <CONSTANT> CLBRACKET
-
-<jagged_array> := JAGGED ARRAY <static_enumeration><brackets><row-list>
-
-<brackets> := OPBRACKET CLBRACKET
-            | OPBRACKET CLBRACKET OPBRACKET CLBRACKET
-
-<row-list> := <row-list><row>
-            | <row>
-
-<row> := R1 OPBRACKET <CONSTANT> CLBRACKET COLON SIZE <CONSTANT> COLON    
-         VALUES OPBRACE <constant-list> CLBRACE
-
-<constant-list> := <constant-list> SEMICOLON <constants>
-
-<constants> := <constants><CONSTANT>
-             | <CONSTANT>
-
-<assignment> := <variable> ASSIGNED <expression>
-
-<operator> := <boolean_operator> 
-            | <arithemetic_operator>
-
-<boolean_operator> := <AND> 
-                    | <OR>
-
-<arithemetic_operator> := <MULTIPLY> 
-                        | <DIVIDE>
-                        | <PLUS>
-                        | <MINUS>
-
-<expression> := <boolean_expression> 
-              | <arithemetic_expression>
-
-<term> := <boolean_term> 
-        | <arithemetic_term>
-<boolean_expression> := <boolean_expression><OR><boolean_expression>
-                      | <boolean_term>
-
-<boolean_term> := OPPARANTHESIS <boolean_term> CLPARENTHESIS
-                | <boolean_term><AND><boolean_term>
-                | <variable>
-
-<arithemetic_expression> := <arithemetic_expression><PLUS><arithemetic_expression>
-                          | <arithemetic_expression><MINUS><arithemetic_expression>
-                          | <arithemetic_term>
-
-<arithemetic_term> := OPPARANTHESIS <arithemetic_expression> CLPARENTHESIS
-                    | <arithemetic_term><MULTIPLY><arithemetic_term>
-                    | <arithemetic_term><DIVIDE><arithemetic_term>
-                    | <variable>
-                    | <CONSTANT>
+<program> := program ( ) { <statement-list> }
+<statement-list> := <statement> <statement-list>
+<statement-list> := <statement>
+<statement> := <declaration> ;
+<statement> := <assignment> ;
+<statement> := <row-list>
+<declaration> := declare list of variables <identifier-list> : <type>
+<declaration> := declare <identifier> : <type>
+<identifier-list> := <identifier>
+<identifier-list> := <identifier> <identifier-list>
+<type> := <primitive_type>
+<type> := <array>
+<primitive_type> := integer
+<primitive_type> := real
+<primitive_type> := boolean
+<array> := <rectangular_array>
+<array> := <jagged_array>
+<rectangular_array> := array <enumeration-list> of integer
+<enumeration-list> := <enumeration> <enumeration-list>
+<enumeration-list> := <enumeration>
+<enumeration> := <static_enumeration>
+<enumeration> := <dynamic_enumeration>
+<static_enumeration> := [ <CONSTANT> .. <CONSTANT> ]
+<dynamic_enumeration> := [ <identifier> .. <identifier> ]
+<dynamic_enumeration> := [ <CONSTANT> .. <identifier> ]
+<dynamic_enumeration> := [ <identifier> .. <CONSTANT> ]
+<jagged_array> := jagged array <static_enumeration><brackets>
+<brackets> := [ ]
+<brackets> := [ ] [ ]
+<row-list> := <row> <row-list>
+<row-list> := <row>
+<row> := R1 [ <CONSTANT> ] : size <CONSTANT> : values { <constant-list> }
+<constant-list> := <constants> ; <constant-list>
+<constant-list> := <constants>
+<constants> := <constants> <CONSTANT>
+<constants> := <CONSTANT>
+<assignment> := <identifier> = <expression>
+<expression> := <boolean_expression>
+<expression> := <arithmetic_expression>
+<term> := <boolean_term>
+<term> := <arithmetic_term>
+<boolean_expression> := <boolean_expression> ||| <boolean_expression>
+<boolean_expression> := <boolean_term>
+<boolean_term> := ( <boolean_expression> )
+<boolean_term> := <boolean_term> &&& <boolean_term>
+<boolean_term> := <identifier>
+<arithmetic_expression> := <arithmetic_expression> + <arithmetic_expression>
+<arithmetic_expression> := <arithmetic_expression> - <arithmetic_expression>
+<arithmetic_expression> := <arithmetic_term>
+<arithmetic_term> := ( <arithmetic_expression> )
+<arithmetic_term> := <arithmetic_term> * <arithmetic_term>
+<arithmetic_term> := <arithmetic_term> / <arithmetic_term>
+<arithmetic_term> := <identifier>
+<arithmetic_term> := <CONSTANT>
