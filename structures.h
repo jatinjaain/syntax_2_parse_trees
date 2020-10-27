@@ -96,6 +96,8 @@ typedef struct Parse_Tree
 	char name[MAX_NAME_LEN];
 	char value[MAX_VALUE_LEN];
 	int num_of_children;
+	int line_num;
+	int rule_num;
 	struct Parse_Tree **children; //array of children
 } Parse_Tree;
 
