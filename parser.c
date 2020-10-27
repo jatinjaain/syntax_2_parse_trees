@@ -20,6 +20,7 @@ typedef struct Stack_Element{
     Token* current;
     int current_len;
     Parse_Tree* subtree;
+    Grammar_Node* rule_node;
 } Stack_Element;
 
 // stack that will be used in the parsing algorithm
@@ -83,16 +84,18 @@ Parse_Tree* createParseTree(Token* s, Grammar* g){
             //for(int i=0;i<statement_length;i++) {printf("%s ",k->value);k=k->next_node;}
             
             temp_pr = Parse(statement_start,statement_label,statement_length);
-            
+            printf("line parse result: %d %s\n",temp_pr.match,temp_pr.subtree->name);
             statement_length = 0;
+            //strcpy(final_parsed_tree->children[final_parsed_tree->num_of_children]->name,"statement");
             final_parsed_tree->children[final_parsed_tree->num_of_children++] = temp_pr.subtree;
-            //printf("Parsed %d\n",line);
+            printf("Filled %d\n",final_parsed_tree->num_of_children-1);
             statement_start = itr;
         }
         statement_length++;
         itr=itr->next_node;
     }
     strcpy(final_parsed_tree->name,"statement-list");
+    printf("Total children %d\n",final_parsed_tree->num_of_children);
     return final_parsed_tree;
 }
 
@@ -100,6 +103,7 @@ Parse_Result Parse(Token* starting_node, Label label, int length){
     Token* k=starting_node;
     printf("---\nTesting %s %s for %d\n",label.name,strcmp(label.name,KEYWORD)==0?label.value:"",length);
     for(int i=0;i<length;i++) {printf("%s ",k->value);k=k->next_node;}
+    k=starting_node;
     printf("\n");
 
     Parse_Result res;
@@ -126,7 +130,10 @@ Parse_Result Parse(Token* starting_node, Label label, int length){
         //printf("comparing %s and %s which is %d\n",grammar->rules[i].name,label.name,strcmp(grammar->rules[i].name,label.name));
         if(!(strcmp(grammar->rules[i].name,label.name)==0)) continue; //skip if left non terminal does not match
         
-        printf("rule %d\n",i);
+        printf("rule %d ",i);
+        for(int j=0;j<length;j++) {printf("%s ",k->value);k=k->next_node;}
+        k=starting_node;
+        printf("\n");
 
         Stack stack;
         stack.index=0;
@@ -140,6 +147,8 @@ Parse_Result Parse(Token* starting_node, Label label, int length){
         Parse_Result temp_pr;
         Label temp_l;
 
+        bool next_rule = false;
+
         while(true){
             if(rn==NULL || rule_node_num>grammar->rules[i].num_of_nodes){
                 printf("inside 1 %d %d\n",rule_node_num,grammar->rules[i].num_of_nodes);
@@ -147,29 +156,36 @@ Parse_Result Parse(Token* starting_node, Label label, int length){
                     Parse_Tree* pt = (Parse_Tree*)malloc(sizeof(Parse_Tree));
                     pt->children = (Parse_Tree**)malloc(stack.index*sizeof(Parse_Tree*));
                     for(int j=0;j<stack.index;j++) pt->children[j] = stack.elements[j].subtree;
+                    strcpy(pt->name,grammar->rules[i].name);
                     res.match = true;
                     res.subtree = pt;
                     printf("returned true 1\n");
                     return res;
                 }
                 else{
-                    Stack_Element popped = pop(&stack);
                     if(stack.index==0){
-                        res.match=false;
-                        return res;
+                        //res.match=false;
+                        //return res;
+                        next_rule=true;
+                        printf("gonna next rule -1\n");
+                        break;
                     }
+                    Stack_Element popped = pop(&stack);
                     t = popped.current;
                     tokens_parsed -= l;
                     l = popped.current_len+1;
-                    rn = rn->prev_node;
+                    rn = popped.rule_node;
                     rule_node_num--;
                     Parse_Tree* temp_tree = popped.subtree;
-                    while(l>= l - grammar->rules[i].num_of_nodes + 1){
+                    while(l> length - grammar->rules[i].num_of_nodes + 1){
                         //delete_subtree(temp_tree,1);
                         if(stack.index==0){
-                            res.match = false;
-                            printf("return false 1\n");
-                            return res;
+                            //res.match = false;
+                            //printf("return false 1\n");
+                            //return res;
+                            next_rule = true;
+                            printf("gonna next rule -2\n");
+                            break;
                         }
                         else{
                             popped = pop(&stack);
@@ -182,10 +198,12 @@ Parse_Result Parse(Token* starting_node, Label label, int length){
                             printf("popping 1\n");
                         }
                     }
-                    l++;
+                    //l++;
                     continue;
                 }
             }
+
+            if(next_rule) break;
 
             strcpy(temp_l.name,rn->name);
             strcpy(temp_l.value,rn->value);
@@ -198,42 +216,49 @@ Parse_Result Parse(Token* starting_node, Label label, int length){
                 to_push.current = t;
                 to_push.current_len = l;
                 to_push.subtree = temp_pr.subtree;
+                to_push.rule_node=rn;
                 push(&stack,&to_push);
+                printf("pushed\n");
                 for(int i=0;i<l;i++) t=t->next_node;
                 tokens_parsed+=l;
                 l=1;
                 rn=rn->next_node;
                 rule_node_num++;
                 if(tokens_parsed==length && rn!=NULL){
-                    res.match=false;
-                    return res;
+                    //res.match=false;
+                    //return res;
+                    printf("return false 4\n");
+                    break;
                 }
                 continue;   
             }
 
             if(!temp_pr.match){
                 printf("inside 2\n");
-                while(l>=length - grammar->rules[i].num_of_nodes +1){
+                l++;
+                while(l>length - grammar->rules[i].num_of_nodes +1){
                     //delete_subtree(temp_tree,1);
                     if(stack.index==0){
-                        res.match = false;
-                        printf("returned true 2\n");
-                        return res;
+                        //res.match = false;
+                        //printf("returned false 2\n");
+                        //return res;
+                        next_rule=true;
+                        break;
                     }
                     else{
                         Stack_Element popped = pop(&stack);
                         printf("popped 2 %d %d %d\n",popped.current_len,length,grammar->rules[i].num_of_nodes);
                         t = popped.current;
                         tokens_parsed -= popped.current_len;
-                        l = popped.current_len;
+                        l = popped.current_len+1;
                         rn = rn->prev_node;
                         rule_node_num--; 
                         temp_tree=popped.subtree;
                     }
                 }
-                l++;
                 continue;
             }
+            if(next_rule) break;
         }
     }
     printf("returned false 3\n");
@@ -255,4 +280,13 @@ bool is_constant(Token* t, Label l){
 bool is_identifier(Token* t, Label l){
     if(strcmp(t->name,IDENTIFIER)==0 && strcmp(l.name,IDENTIFIER)==0) {return true;}
     return false;
+}
+
+void printParseTree(Parse_Tree* pt,int depth){
+    printf("---\n");
+    printf("%d\n",depth);
+    printf("%s",pt->name);
+    if(strcmp(pt->name,KEYWORD)==0 || strcmp(pt->name,IDENTIFIER)==0 || strcmp(pt->name,CONSTANT)==0) printf(" %s",pt->value);
+    printf("\n");
+    for(int i=0;i<pt->num_of_children;i++) printParseTree(pt->children[i],depth+1);
 }

@@ -20,20 +20,20 @@
 <enumeration-list> := <enumeration>
 <enumeration> := <static_enumeration>
 <enumeration> := <dynamic_enumeration>
-<static_enumeration> := [ <CONSTANT> .. <CONSTANT> ]
+<static_enumeration> := [ <constant> .. <constant> ]
 <dynamic_enumeration> := [ <identifier> .. <identifier> ]
-<dynamic_enumeration> := [ <CONSTANT> .. <identifier> ]
-<dynamic_enumeration> := [ <identifier> .. <CONSTANT> ]
+<dynamic_enumeration> := [ <constant> .. <identifier> ]
+<dynamic_enumeration> := [ <identifier> .. <constant> ]
 <jagged_array> := jagged array <static_enumeration><brackets>
 <brackets> := [ ]
 <brackets> := [ ] [ ]
 <row-list> := <row> <row-list>
 <row-list> := <row>
-<row> := R1 [ <CONSTANT> ] : size <CONSTANT> : values { <constant-list> }
+<row> := R1 [ <constant> ] : size <constant> : values { <constant-list> }
 <constant-list> := <constants> ; <constant-list>
 <constant-list> := <constants>
-<constants> := <constants> <CONSTANT>
-<constants> := <CONSTANT>
+<constants> := <constants> <constant>
+<constants> := <constant>
 <assignment> := <identifier> = <expression>
 <expression> := <boolean_expression>
 <expression> := <arithmetic_expression>
