@@ -105,5 +105,5 @@ extern int num_of_keywords;
 
 Grammar readGrammar(char *, Grammar);
 Token *tokenizer(FILE *);
-Parse_Tree *createParseTree(Parse_Tree *, Token *, Grammar *);
+Parse_Tree *createParseTree(Token *, Grammar *);
 #endif
