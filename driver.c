@@ -8,6 +8,9 @@ int main()
 {
 	int option;
 	Grammar G;
+	Token* stream;
+	Parse_Tree* pt;
+	FILE* f;
 	while (1)
 	{
 		scanf("%d", &option);
@@ -18,6 +21,11 @@ int main()
 			break;
 		case 1:
 			//create parse trees
+			G = readGrammar("grammar.txt",G);
+			f = fopen("./sourcecode.txt", "r");
+			stream = tokenizer(f);
+			pt = createParseTree(stream,&G);
+			break;
 		case 2:
 			//transverse parse trees
 			break;
@@ -30,12 +38,13 @@ int main()
 		case 5:
 			//testing the grammar
 			G = readGrammar("grammar.txt", G);
+			printf("Number of rules =  %d\n",G.num_of_rules);
 			printGrammar(&G);
 			break;
 		case 6:
 			G = readGrammar("grammar.txt", G);
-			FILE *f = fopen("./sourcecode.txt", "r");
-			Token *stream = tokenizer(f);
+			f = fopen("./sourcecode.txt", "r");
+			stream = tokenizer(f);
 			printTokenStream(stream);
 			break;
 		}
@@ -53,6 +62,7 @@ void printGrammar(Grammar *G)
 			// printf("%s", k->name);
 			//if(strcmp(G->rules[i].name,KEYWORD)) printf("/%s",G->rules[i].value);
 			printf("%s/%s", k->name,k->value);
+			if(k->prev_node!=NULL) printf("/%s/%s",k->prev_node->name,k->prev_node->value);
 			printf("\t");
 			k = k->next_node;
 		}
@@ -71,7 +81,7 @@ void printTokenStream(Token *tok)
 			printf("\n");
 			lines = tok->line_num;
 		}
-		printf("%s/%s ",tok->name ,tok->value);
+		printf("%d/%s/%s ",tok->line_num,tok->name ,tok->value);
 		tok = tok->next_node;
 	}
 
