@@ -27,10 +27,15 @@ int main()
 			pt = createParseTree(stream,&G);
 			break;
 		case 2:
-			//transverse parse trees
+			//transnverse parse trees
 			break;
 		case 3:
 			//print parse trees
+			G = readGrammar("grammar.txt",G);
+			f = fopen("./sourcecode.txt", "r");
+			stream = tokenizer(f);
+			pt = createParseTree(stream,&G);
+			printParseTree(pt,0);
 			break;
 		case 4:
 			//print type expression table
@@ -63,7 +68,7 @@ void printGrammar(Grammar *G)
 			//if(strcmp(G->rules[i].name,KEYWORD)) printf("/%s",G->rules[i].value);
 			printf("%s/%s", k->name,k->value);
 			if(k->prev_node!=NULL) printf("/%s/%s",k->prev_node->name,k->prev_node->value);
-			printf("\t");
+			printf(" \t");
 			k = k->next_node;
 		}
 		printf("\n");
