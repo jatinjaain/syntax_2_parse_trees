@@ -62,13 +62,13 @@ void insertGrammarToken(char *grammar_token, Grammar_Node *node)
 	{
 		grammar_token[strlen(grammar_token) - 1] = '\0';
 		grammar_token++;
-		strcpy(node->name, "terminal");
+		strcpy(node->name, grammar_token);
 	}
 	else if (isnonterminal(grammar_token))
 	{
 		grammar_token[strlen(grammar_token) - 1] = '\0';
 		grammar_token++;
-		strcpy(node->name, "nonterminal");
+		strcpy(node->name, grammar_token);
 	}
 	else if (iskeyword(grammar_token))
 	{
