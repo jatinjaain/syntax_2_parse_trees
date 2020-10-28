@@ -13,6 +13,7 @@
 #define MAX_RULES_NUM 100			//maximum number of rules
 #define MAX_CAPACITY_STACK 20 //maximum capacity of stack
 #define MAX_LINES 100					//max number of lines expected
+#define MAX_IDENTIFIER 1000
 
 /*
  * defines common data-structures that will be used by individual files of program
@@ -101,6 +102,24 @@ typedef struct Parse_Tree
 	struct Parse_Tree **children; //array of children
 } Parse_Tree;
 
+
+typedef struct typeExpression
+{
+	char name[MAX_NAME_LEN];
+	enum State
+	{
+		Primitive,
+		Rarray,
+		Jarray
+	} type;
+
+	char arrayAttribute[MAX_NAME_LEN];
+	char expression[MAX_NAME_LEN];
+} typeExpression;
+
+typeExpression Table[MAX_IDENTIFIER];
+extern int num_of_identifiers;
+
 char keyword[1000][MAX_VALUE_LEN]; //Array of keywords in the grammar
 
 extern int num_of_keywords;
@@ -109,4 +128,7 @@ Grammar readGrammar(char *, Grammar);
 Token *tokenizer(FILE *);
 Parse_Tree *createParseTree(Token *, Grammar *);
 void printParseTree(Parse_Tree*,int);
+
+void traverseParseTree(Parse_Tree *statements);
+
 #endif

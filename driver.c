@@ -14,6 +14,7 @@ int main()
 	while (1)
 	{
 		scanf("%d", &option);
+		getchar();
 		switch (option)
 		{
 		case 0:
@@ -36,6 +37,7 @@ int main()
 			stream = tokenizer(f);
 			pt = createParseTree(stream,&G);
 			printParseTree(pt,0);
+			traverseParseTree(pt);
 			break;
 		case 4:
 			//print type expression table
