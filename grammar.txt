@@ -16,8 +16,8 @@
 <array> := <rectangular_array>
 <array> := <jagged_array>
 <rectangular_array> := array <enumeration-list> of integer
-<enumeration-list> := <enumeration> <enumeration-list>
 <enumeration-list> := <enumeration>
+<enumeration-list> := <enumeration> <enumeration-list>
 <enumeration> := <static_enumeration>
 <enumeration> := <dynamic_enumeration>
 <static_enumeration> := [ <constant> .. <constant> ]

@@ -348,7 +348,7 @@ void printParseTree(Parse_Tree* pt,int depth){
     
     printf("---\n");
     if(strcmp(pt->name,KEYWORD)==0 || strcmp(pt->name,IDENTIFIER)==0 || strcmp(pt->name,CONSTANT)==0){
-        printf("terminal\n");
+        printf("terminal\t%d\n", pt->num_of_children);
         printf("%s (%s)\n",pt->value,pt->name);
         printf("line number: %d\n",pt->line_num);
         printf("depth: %d\n",depth);
