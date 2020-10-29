@@ -102,6 +102,12 @@ typedef struct Parse_Tree
 	struct Parse_Tree **children; //array of children
 } Parse_Tree;
 
+typedef struct Range
+{
+	int num_of_dimensions;
+	int lowest[MAX_RULE_LEN];
+	int highest[MAX_RULE_LEN];
+} Range;
 
 typedef struct typeExpression
 {
@@ -114,21 +120,26 @@ typedef struct typeExpression
 	} type;
 
 	char arrayAttribute[MAX_NAME_LEN];
-	char expression[MAX_NAME_LEN];
+
+	union Specify
+	{
+		char typeName[MAX_NAME_LEN];
+		Range range;
+	} expression;
 } typeExpression;
 
 typeExpression Table[MAX_IDENTIFIER];
 extern int num_of_identifiers;
 
 char keyword[1000][MAX_VALUE_LEN]; //Array of keywords in the grammar
-
 extern int num_of_keywords;
 
 Grammar readGrammar(char *, Grammar);
 Token *tokenizer(FILE *);
 Parse_Tree *createParseTree(Token *, Grammar *);
-void printParseTree(Parse_Tree*,int);
+void printParseTree(Parse_Tree *, int);
 
 void traverseParseTree(Parse_Tree *statements);
+void printTypeExpressionTable();
 
 #endif
