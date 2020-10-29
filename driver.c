@@ -1,3 +1,11 @@
+/*
+ * Group No. - 48
+ * Members:
+ * 2018A7PS0181P, Bikash Jena
+ * 2018A7PS0276P, Jatin Jain
+ * 2018A7PS0131P, Utkarsh Dwivedi
+ */
+
 #include "structures.h"
 #include "grammar_definitions.h"
 
@@ -8,11 +16,18 @@ int main()
 {
 	int option;
 	Grammar G;
-	Token* stream;
-	Parse_Tree* pt;
-	FILE* f;
+	Token *stream;
+	Parse_Tree *pt;
+	FILE *f;
+	printf("Option 0: Exit\n");
+	printf("Option 1: Create parse tree\n");
+	printf("Option 2: Traverse the parse tree to construct typeExpressionTable. Also print the type errors while traversing the parse tree and accessing the typeExpressionTable.\n");
+	printf("Option 3: Print parse tree in the specified format\n");
+	printf("Option 4: Print typeExpressionTable in the specified format.\n");
+
 	while (1)
 	{
+		printf("\nEnter option: ");
 		scanf("%d", &option);
 		getchar();
 		switch (option)
@@ -22,30 +37,31 @@ int main()
 			break;
 		case 1:
 			//create parse trees
-			G = readGrammar("grammar.txt",G);
+			G = readGrammar("grammar.txt", G);
 			f = fopen("./sourcecode.txt", "r");
 			stream = tokenizer(f);
-			pt = createParseTree(stream,&G);
+			pt = createParseTree(stream, &G);
 			break;
 		case 2:
-			//transnverse parse trees
+			//tranverse parse trees and report errors
+			traverseParseTree(pt);
 			break;
 		case 3:
 			//print parse trees
-			G = readGrammar("grammar.txt",G);
+			G = readGrammar("grammar.txt", G);
 			f = fopen("./sourcecode.txt", "r");
 			stream = tokenizer(f);
-			pt = createParseTree(stream,&G);
-			printParseTree(pt,0);
-			traverseParseTree(pt);
-			printTypeExpressionTable();
+			pt = createParseTree(stream, &G);
+			printParseTree(pt, 0);
 			break;
 		case 4:
+			//print type expression table
+			printTypeExpressionTable();
 			break;
 		case 5:
 			//testing the grammar
 			G = readGrammar("grammar.txt", G);
-			printf("Number of rules =  %d\n",G.num_of_rules);
+			printf("Number of rules =  %d\n", G.num_of_rules);
 			printGrammar(&G);
 			break;
 		case 6:
@@ -53,6 +69,9 @@ int main()
 			f = fopen("./sourcecode.txt", "r");
 			stream = tokenizer(f);
 			printTokenStream(stream);
+			break;
+		default:
+			printf("Wrong option.\n");
 			break;
 		}
 	}
@@ -68,8 +87,9 @@ void printGrammar(Grammar *G)
 		{
 			// printf("%s", k->name);
 			//if(strcmp(G->rules[i].name,KEYWORD)) printf("/%s",G->rules[i].value);
-			printf("%s/%s", k->name,k->value);
-			if(k->prev_node!=NULL) printf("/%s/%s",k->prev_node->name,k->prev_node->value);
+			printf("%s/%s", k->name, k->value);
+			if (k->prev_node != NULL)
+				printf("/%s/%s", k->prev_node->name, k->prev_node->value);
 			printf(" \t");
 			k = k->next_node;
 		}
@@ -88,7 +108,7 @@ void printTokenStream(Token *tok)
 			printf("\n");
 			lines = tok->line_num;
 		}
-		printf("%d/%s/%s ",tok->line_num,tok->name ,tok->value);
+		printf("%d/%s/%s ", tok->line_num, tok->name, tok->value);
 		tok = tok->next_node;
 	}
 

@@ -1,3 +1,11 @@
+/*
+ * Group No. - 48
+ * Members:
+ * 2018A7PS0181P, Bikash Jena
+ * 2018A7PS0276P, Jatin Jain
+ * 2018A7PS0131P, Utkarsh Dwivedi
+ */
+
 #ifndef STRUCTURES_H
 #define STRUCTURES_H
 
@@ -102,6 +110,12 @@ typedef struct Parse_Tree
 	struct Parse_Tree **children; //array of children
 } Parse_Tree;
 
+
+/*
+ * Contains the number of dimensions of static
+ * rectangular array alongwith lower and upper
+ * bounds for each dimension
+ */
 typedef struct Range
 {
 	int num_of_dimensions;
@@ -109,6 +123,11 @@ typedef struct Range
 	int highest[MAX_RULE_LEN];
 } Range;
 
+
+/*
+ * Type Expression struct used
+ * to construct typeExpressionTable (array)
+ */
 typedef struct typeExpression
 {
 	char name[MAX_NAME_LEN];
@@ -131,6 +150,20 @@ typedef struct typeExpression
 typeExpression Table[MAX_IDENTIFIER];
 extern int num_of_identifiers;
 
+
+typedef struct Error
+{
+	int line_num;
+	char statement_type[MAX_NAME_LEN];
+	char operator[MAX_NAME_LEN];
+	char first_lex[MAX_VALUE_LEN];
+	char first_type[MAX_NAME_LEN];
+	char second_lex[MAX_VALUE_LEN];
+	char second_type[MAX_NAME_LEN];
+	int depth;
+	char message[31];
+} Error;
+
 char keyword[1000][MAX_VALUE_LEN]; //Array of keywords in the grammar
 extern int num_of_keywords;
 
@@ -141,5 +174,29 @@ void printParseTree(Parse_Tree *, int);
 
 void traverseParseTree(Parse_Tree *statements);
 void printTypeExpressionTable();
+void printError(Error err);
+
+
+// Traverse helpers begin
+bool isDeclaration(Parse_Tree *statement);
+bool isAssignment(Parse_Tree *statement);
+int findDeclaredType(Parse_Tree *declaration);
+Parse_Tree *findIdentifierList(Parse_Tree *declaration);
+
+int sizeJaggedArray(Parse_Tree *declaration);
+void insertPrimitiveInTable(Parse_Tree *identifier_list, int type);
+void insertArrayInTable(Parse_Tree *identifier_list, int type, int line_num, Parse_Tree *statements);
+
+Parse_Tree *findEnumList(Parse_Tree *declaration_statement);
+bool isStaticEnum(Parse_Tree *enum_list);
+Range calculateStaticLimits(Parse_Tree *enum_list);
+int errorJaggedArray(Parse_Tree *statement_list, int line_num);
+Error checkAssignment(Parse_Tree *assignment);
+typeExpression findType(Parse_Tree *identifier);
+bool inBounds(Parse_Tree *static_array_identifier);
+
+Error verifyExpression(Parse_Tree *expression, typeExpression left_type);
+Error verifyTerm(Parse_Tree *term, typeExpression type);
+// Traverse helpers end
 
 #endif
