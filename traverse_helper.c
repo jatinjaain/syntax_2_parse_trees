@@ -431,7 +431,7 @@ Error verifyTerm(Parse_Tree *term, typeExpression left_type)
       strcpy(err.message, "type error");
       strcpy(err.operator, trail_operator);
       strcpy(err.first_lex, trail_name);
-      strcpy(err.first_type, );
+      strcpy(err.first_type, trail_type);
 
       printf("%s\n", itr->children[0]->value);
       strcpy(err.second_lex, identifier_type.name);
