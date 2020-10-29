@@ -37,6 +37,7 @@ int main()
 			stream = tokenizer(f);
 			pt = createParseTree(stream,&G);
 			printParseTree(pt,0);
+			printf("\n");
 			traverseParseTree(pt);
 			printTypeExpressionTable();
 			break;
