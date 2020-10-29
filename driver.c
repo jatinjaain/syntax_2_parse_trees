@@ -38,9 +38,9 @@ int main()
 			pt = createParseTree(stream,&G);
 			printParseTree(pt,0);
 			traverseParseTree(pt);
+			printTypeExpressionTable();
 			break;
 		case 4:
-			//print type expression table
 			break;
 		case 5:
 			//testing the grammar

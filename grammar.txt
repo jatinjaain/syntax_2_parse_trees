@@ -3,7 +3,7 @@
 <statement-list> := <statement>
 <statement> := <declaration> ;
 <statement> := <assignment> ;
-<statement> := <row-list>
+<statement> := <row>
 <declaration> := declare list of variables <identifier-list> : <type>
 <declaration> := declare <identifier> : <type>
 <identifier-list> := <identifier>
@@ -27,8 +27,6 @@
 <jagged_array> := jagged array <static_enumeration> <brackets> of integer
 <brackets> := [ ]
 <brackets> := [ ] [ ]
-<row-list> := <row>
-<row-list> := <row> <row-list>
 <row> := R1 [ <constant> ] : size <constant> : values { <constant-list> }
 <constants> := <constant>
 <constant-list> := <constants>
