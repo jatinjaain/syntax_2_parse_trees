@@ -1,4 +1,12 @@
 /*
+ * Group No. - 48
+ * Members:
+ * 2018A7PS0181P, Bikash Jena
+ * 2018A7PS0276P, Jatin Jain
+ * 2018A7PS0131P, Utkarsh Dwivedi
+ */
+
+/*
  * provides createParseTree(parseTree* T,tokenStream* S, grammar* G)
  * creates parse tree at T of token-stream S using grammar G
  * 
@@ -59,7 +67,7 @@ typedef struct Label{
     char value[MAX_VALUE_LEN];
 } Label;
 
-Parse_Result Parse(Token*,Label,int,int);
+Parse_Result Parse(Token*,Label,int,int,int);
 bool is_identifier(Token*, Label);
 bool is_keyword(Token*,Label);
 bool is_constant(Token*,Label);
@@ -84,7 +92,7 @@ Parse_Tree* createParseTree(Token* s, Grammar* g){
             //Token* k=statement_start;
             //for(int i=0;i<statement_length;i++) {printf("%s ",k->value);k=k->next_node;}
             
-            temp_pr = Parse(statement_start,statement_label,statement_length,line);
+            temp_pr = Parse(statement_start,statement_label,statement_length,line,1);
             //printf("line parse result: %d %s\n",temp_pr.match,temp_pr.subtree->name);
             statement_length = 0;
             if(temp_pr.match==false) printf("syntatically wrong statement %d\n",line);
@@ -102,7 +110,7 @@ Parse_Tree* createParseTree(Token* s, Grammar* g){
     return final_parsed_tree;
 }
 
-Parse_Result Parse(Token* starting_node, Label label, int length, int line){
+Parse_Result Parse(Token* starting_node, Label label, int length, int line,int depth){
     Token* k=starting_node;
     //printf("---\nTesting %s %s for %d\n",label.name,strcmp(label.name,KEYWORD)==0?label.value:"",length);
     //for(int i=0;i<length;i++) {printf("%s ",k->value);k=k->next_node;}
@@ -130,6 +138,7 @@ Parse_Result Parse(Token* starting_node, Label label, int length, int line){
         strcpy(pt->value,starting_node->value);
         pt->line_num=line;
         res.subtree = pt;
+        res.subtree->depth=depth;
         if(is_keyword(starting_node,label) || is_constant(starting_node,label) || is_identifier(starting_node,label)){
             res.match = true;
             //printf("returned true\n");
@@ -177,6 +186,7 @@ Parse_Result Parse(Token* starting_node, Label label, int length, int line){
                     strcpy(pt->name,grammar->rules[i].name);
                     res.match = true;
                     res.subtree = pt;
+                    res.subtree->depth=depth;
                     //printf("returned true 1\n");
                     return res;
                 }
@@ -227,7 +237,7 @@ Parse_Result Parse(Token* starting_node, Label label, int length, int line){
             strcpy(temp_l.name,rn->name);
             strcpy(temp_l.value,rn->value);
             
-            temp_pr = Parse(t,temp_l,l,line);
+            temp_pr = Parse(t,temp_l,l,line,depth+1);
             temp_tree = temp_pr.subtree;
 
             if(temp_pr.match){
@@ -344,7 +354,7 @@ bool is_identifier(Token* t, Label l){
     return false;
 }
 
-void printParseTree(Parse_Tree* pt,int depth){
+void printParseTree(Parse_Tree* pt){
     /*
     printf("---\n");
     printf("%d\n"
@@ -360,15 +370,15 @@ void printParseTree(Parse_Tree* pt,int depth){
         printf("terminal\n");
         printf("%s (%s)\n",pt->value,pt->name);
         printf("line number: %d\n",pt->line_num);
-        printf("depth: %d\n",depth);
+        printf("depth: %d\n",pt->depth);
     }
     else{
         printf("non-terminal\n");
         printf("%s\n",pt->name);
         printf("children: %d\n",pt->num_of_children);
         printf("grammar rule: %d\n",pt->rule_num);
-        printf("depth: %d\n",depth);
-        for(int i=0;i<pt->num_of_children;i++) printParseTree(pt->children[i],depth+1);
+        printf("depth: %d\n",pt->depth);
+        for(int i=0;i<pt->num_of_children;i++) printParseTree(pt->children[i]);
     }
     
 }

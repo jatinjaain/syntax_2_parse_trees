@@ -1,4 +1,12 @@
 /*
+ * Group No. - 48
+ * Members:
+ * 2018A7PS0181P, Bikash Jena
+ * 2018A7PS0276P, Jatin Jain
+ * 2018A7PS0131P, Utkarsh Dwivedi
+ */
+
+/*
  * provides readGrammar("grammar.txt",grammar* G) 
  * that reads grammar from grammar.txt,
  * populates array of linked-list grammar G 
