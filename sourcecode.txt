@@ -1,7 +1,7 @@
 program ( )
 {
 	declare list of variables abcd ghd2_1 ssd_2_3 : array [ 2 .. 5 ] of integer ;
-	declare list of variables new d w e2 : integer ;
+	declare list of variables new d w e2 c : integer ;
 	declare v1 : integer ;
  	declare list of variables a1 a2 : integer ;
 	declare list of variables b1 b2 b3 : boolean ;
@@ -21,4 +21,6 @@ program ( )
 	R1 [ 6 ]  : size 4 : values { 67 ; 91 ; 13 ; 44 }
 	R1 [ 7 ]  : size 1 : values { 17 }
 	R1 [ 8 ]  : size 5 : values { 31 ; 97 ; 10 ; 9 ; 120 }
+	
+	new = d * e2 * c / 7 + w + 76875 ;
 }
