@@ -107,6 +107,7 @@ typedef struct Parse_Tree
 	int num_of_children;
 	int line_num;
 	int rule_num;
+	int depth;
 	struct Parse_Tree **children; //array of children
 } Parse_Tree;
 
@@ -170,7 +171,7 @@ extern int num_of_keywords;
 Grammar readGrammar(char *, Grammar);
 Token *tokenizer(FILE *);
 Parse_Tree *createParseTree(Token *, Grammar *);
-void printParseTree(Parse_Tree *, int);
+void printParseTree(Parse_Tree *);
 
 void traverseParseTree(Parse_Tree *statements);
 void printTypeExpressionTable();

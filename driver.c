@@ -52,7 +52,7 @@ int main()
 			f = fopen("./sourcecode.txt", "r");
 			stream = tokenizer(f);
 			pt = createParseTree(stream, &G);
-			printParseTree(pt, 0);
+			printParseTree(pt);
 			break;
 		case 4:
 			//print type expression table
