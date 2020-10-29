@@ -11,8 +11,15 @@ int main()
 	Token* stream;
 	Parse_Tree* pt;
 	FILE* f;
+	printf("Option 0: Exit\n");
+	printf("Option 1: Create parse tree\n");
+	printf("Option 2: Traverse the parse tree to construct typeExpressionTable. Also print the type errors while traversing the parse tree and accessing the typeExpressionTable.\n");
+	printf("Option 3: Print parse tree in the specified format\n");
+	printf("Option 4: Print typeExpressionTable in the specified format.\n");
+
 	while (1)
 	{
+		printf("Enter option: ");
 		scanf("%d", &option);
 		getchar();
 		switch (option)
@@ -28,7 +35,7 @@ int main()
 			pt = createParseTree(stream,&G);
 			break;
 		case 2:
-			//transnverse parse trees
+			//tranverse parse trees and report errors
 			break;
 		case 3:
 			//print parse trees
@@ -37,10 +44,9 @@ int main()
 			stream = tokenizer(f);
 			pt = createParseTree(stream,&G);
 			printParseTree(pt,0);
-			traverseParseTree(pt);
-			printTypeExpressionTable();
 			break;
 		case 4:
+			//print type expression table
 			break;
 		case 5:
 			//testing the grammar
@@ -53,6 +59,9 @@ int main()
 			f = fopen("./sourcecode.txt", "r");
 			stream = tokenizer(f);
 			printTokenStream(stream);
+			break;
+		default:
+			printf("Wrong option.\n");
 			break;
 		}
 	}
