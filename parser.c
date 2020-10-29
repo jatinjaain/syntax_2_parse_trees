@@ -40,9 +40,11 @@ Stack_Element pop(Stack* s){
 void delete_subtree(Parse_Tree* pt, int delete_self){
 //given a parse tree it frees its memory as it was dynamically allocated
     for(int i=0;i<pt->num_of_children;i++){
-        if(pt->children[i]->num_of_children != 0) delete_subtree(pt->children[i],0);
+        //if(pt->children[i]->num_of_children != 0) delete_subtree(pt->children[i],0);
+        delete_subtree(pt->children[i],0);
         //free(pt->children[i]);
     }
+    free(pt->children);
     free(pt);
 }
 
@@ -112,6 +114,7 @@ Parse_Result Parse(Token* starting_node, Label label, int length, int line){
     //if(strcmp(label.name,"arithmetic_expression")==0) printf("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n");
 
     Parse_Result res;
+    Parse_Tree* temp_tree;
 
     if(length!=1 && (strcmp(IDENTIFIER,label.name)==0 || strcmp(CONSTANT,label.name)==0 || strcmp(KEYWORD,label.name)==0)){
         res.match = false;
@@ -134,6 +137,7 @@ Parse_Result Parse(Token* starting_node, Label label, int length, int line){
         }
         //printf("returned false\n");
         res.match = false;
+        delete_subtree(res.subtree,1);
         return res;
     }
     //checking each rule
@@ -190,10 +194,10 @@ Parse_Result Parse(Token* starting_node, Label label, int length, int line){
                     l = popped.current_len+1;
                     rn = popped.rule_node;
                     rule_node_num--;
-                    Parse_Tree* temp_tree = popped.subtree;
+                    temp_tree = popped.subtree;
+                    delete_subtree(temp_tree,1);
                     //printf("trying with  A %d %d %d %d %d\n",length,l,grammar->rules[i].num_of_nodes,stack.index,tokens_parsed);
                     while(l> length - grammar->rules[i].num_of_nodes + stack.index - tokens_parsed+1){
-                        //delete_subtree(temp_tree,1);
                         if(stack.index==0){
                             res.match = false;
                             //printf("return false 1\n");
@@ -210,6 +214,7 @@ Parse_Result Parse(Token* starting_node, Label label, int length, int line){
                             rn = popped.rule_node;
                             rule_node_num--; 
                             temp_tree = popped.subtree;
+                            delete_subtree(temp_tree,1);
                             //printf("popping 1 %s\n",popped.rule_node->name);
                         }
                     }
@@ -223,7 +228,7 @@ Parse_Result Parse(Token* starting_node, Label label, int length, int line){
             strcpy(temp_l.value,rn->value);
             
             temp_pr = Parse(t,temp_l,l,line);
-            Parse_Tree* temp_tree = temp_pr.subtree;
+            temp_tree = temp_pr.subtree;
 
             if(temp_pr.match){
                 Stack_Element to_push;
@@ -248,6 +253,7 @@ Parse_Result Parse(Token* starting_node, Label label, int length, int line){
                 if(tokens_parsed==length && rn!=NULL){
                     Stack_Element popped;
                     popped=pop(&stack);
+                    delete_subtree(popped.subtree,1);
 
                     if(stack.index==0) break; //next_rule
                     
@@ -258,6 +264,7 @@ Parse_Result Parse(Token* starting_node, Label label, int length, int line){
                     rn = popped.rule_node;
                     rule_node_num--;
                     temp_tree = popped.subtree;
+                    delete_subtree(temp_tree,1);
                     //printf("trying with B %d %d %d %d %d\n",length,l,grammar->rules[i].num_of_nodes,stack.index,tokens_parsed);
                     while(l> length - grammar->rules[i].num_of_nodes + stack.index - tokens_parsed+1){
                         //delete_subtree(temp_tree,1);
@@ -277,6 +284,7 @@ Parse_Result Parse(Token* starting_node, Label label, int length, int line){
                             rn = popped.rule_node;
                             rule_node_num--; 
                             temp_tree = popped.subtree;
+                            delete_subtree(temp_tree,1);
                             //printf("popping 5 %s\n",popped.rule_node->name);
                         }
                     }
@@ -306,6 +314,7 @@ Parse_Result Parse(Token* starting_node, Label label, int length, int line){
                         rn = rn->prev_node;
                         rule_node_num--; 
                         temp_tree=popped.subtree;
+                        delete_subtree(temp_tree,1);
                     }
                 }
             }
