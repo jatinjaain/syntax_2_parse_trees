@@ -60,8 +60,8 @@ Grammar readGrammar(char *filename, Grammar grammar)
 		counter++;
 	}
 	grammar.num_of_rules = counter;
-	return grammar;
 	fclose(file);
+	return grammar;
 }
 
 void insertGrammarToken(char *grammar_token, Grammar_Node *node)

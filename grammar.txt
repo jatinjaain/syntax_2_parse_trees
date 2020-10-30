@@ -49,10 +49,12 @@
 <addsub> := -
 <arithmetic_term> := <constant>
 <arithmetic_term> := <identifier>
-<arithmetic_term> := <identifier> [ <dimensions> ]
+<arithmetic_term> := <array_term>
+<array_term> := <identifier> [ <dimensions> ]
 <dimensions> := <constant>
 <dimensions> := <constant> <dimensions>
 <arithmetic_term> := <constant> <muldiv> <arithmetic_term>
 <arithmetic_term> := <identifier> <muldiv> <arithmetic_term>
+<arithmetic_term> := <array_term> <muldiv> <arithmetic_term>
 <muldiv> := *
 <muldiv> := /
