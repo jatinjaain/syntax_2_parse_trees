@@ -10,7 +10,7 @@
 
 void printTypeExpressionTable()
 {
-  printf("No. of identifiers:\t%d\n\n", num_of_identifiers);
+  printf("\nNo. of identifiers:\t%d\n\n", num_of_identifiers);
   printf("%-20s%-20s%-20s%-30s\n", "name", "enum_type", "attribute", "type_expression/range");
   for (int i = 0; i < num_of_identifiers; i++)
   {
