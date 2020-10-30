@@ -25,7 +25,7 @@ int errorJaggedArray(Parse_Tree *statement_list, int line_num);
 typeExpression findType(Parse_Tree *identifier);
 
 void verifyExpression(Parse_Tree *expression, typeExpression left_type);
-bool verifyTerm(Parse_Tree *term, typeExpression type);
+bool verifyTerm(Parse_Tree *term, typeExpression type, char *operator);
 
 bool isDeclaration(Parse_Tree *statement)
 {
@@ -363,11 +363,16 @@ void checkAssignment(Parse_Tree *assignment_statement)
 	if (left_type.type == Rarray || left_type.type == Jarray)
 	{
 		Parse_Tree *itr = assignment_statement->children[2]->children[0];
+		if (strcmp(itr->name, "arithmetic_expression") != 0)
+		{
+			verifyExpression(assignment_statement->children[2], left_type);
+			return;
+		}
+
 		while (itr->num_of_children == 2)
 		{
 			if (findType(itr->children[0]->children[0]).type != left_type.type)
 			{
-				printf("%s\n", itr->children[0]->value);
 				if (strcmp(left_type.arrayAttribute, "static") == 0)
 				{
 					strcpy(err.first_type, "array");
@@ -376,7 +381,11 @@ void checkAssignment(Parse_Tree *assignment_statement)
 				{
 					strcpy(err.first_type, left_type.expression.typeName);
 				}
-				printError(err);
+				printf("Error at line %-8d ", itr->line_num);
+				printf("%-20s ", "assignment");
+				printf("depth: %-118d ", itr->depth);
+				printf("%-20s\n", "array type error");
+				return;
 			}
 			itr = itr->children[1];
 		}
@@ -390,7 +399,10 @@ void checkAssignment(Parse_Tree *assignment_statement)
 			{
 				strcpy(err.first_type, left_type.expression.typeName);
 			}
-			printError(err);
+			printf("Error at line %-8d ", itr->line_num);
+			printf("%-20s ", "assignment");
+			printf("depth: %-118d ", itr->depth);
+			printf("%-20s\n", "array type error");
 		}
 	}
 	if (strcmp(left_type.expression.typeName, "error") == 0)
@@ -417,13 +429,14 @@ void verifyExpression(Parse_Tree *expression, typeExpression left_type)
 	{
 		if (strcmp(left_type.expression.typeName, "boolean") != 0)
 		{
-			printf("Error at line %d,\t Assignee expression type error\n", expression->line_num);
+			strcpy(err.message, "assignee expression mismatch");
+			printError(err);
 			return;
 		}
 
 		while (itr->num_of_children == 3)
 		{
-			stop = verifyTerm(itr->children[0], left_type);
+			stop = verifyTerm(itr->children[0], left_type, itr->children[1]->value);
 			if (stop == true)
 			{
 				return;
@@ -431,7 +444,7 @@ void verifyExpression(Parse_Tree *expression, typeExpression left_type)
 
 			itr = itr->children[2];
 		}
-		stop = verifyTerm(itr->children[0], left_type);
+		stop = verifyTerm(itr->children[0], left_type, "|||");
 		if (stop == true)
 		{
 			return;
@@ -440,17 +453,21 @@ void verifyExpression(Parse_Tree *expression, typeExpression left_type)
 
 	else if (strcmp(expression->children[0]->name, "arithmetic_expression") == 0)
 	{
+		char *op = "";
 		if (strcmp(left_type.expression.typeName, "boolean") == 0)
 		{
-			printf("Error at line %d,\t Assignee expression type error\n", expression->line_num);
+			strcpy(err.message, "assignee expression mismatch");
+			printError(err);
 			return;
 		}
-
+	
 		else if (strcmp(left_type.expression.typeName, "integer") == 0)
 		{
+			
 			while (itr->num_of_children == 3)
 			{
-				stop = verifyTerm(itr->children[0], left_type);
+				op = itr->children[1]->children[0]->value;
+				stop = verifyTerm(itr->children[0], left_type, itr->children[1]->children[0]->value);
 				if (stop == true)
 				{
 					return;
@@ -458,7 +475,7 @@ void verifyExpression(Parse_Tree *expression, typeExpression left_type)
 
 				itr = itr->children[2];
 			}
-			stop = verifyTerm(itr->children[0], left_type);
+			stop = verifyTerm(itr->children[0], left_type, op);
 			if (stop == true)
 			{
 				return;
@@ -468,7 +485,8 @@ void verifyExpression(Parse_Tree *expression, typeExpression left_type)
 		{
 			while (itr->num_of_children == 3)
 			{
-				stop = verifyTerm(itr->children[0], left_type);
+				op = itr->children[1]->children[0]->value;
+				stop = verifyTerm(itr->children[0], left_type, itr->children[1]->children[0]->value);
 				if (stop == true)
 				{
 					return;
@@ -476,7 +494,7 @@ void verifyExpression(Parse_Tree *expression, typeExpression left_type)
 
 				itr = itr->children[2];
 			}
-			stop = verifyTerm(itr->children[0], left_type);
+			stop = verifyTerm(itr->children[0], left_type, op);
 			if (stop == true)
 			{
 				return;
@@ -485,7 +503,7 @@ void verifyExpression(Parse_Tree *expression, typeExpression left_type)
 	}
 }
 
-bool verifyTerm(Parse_Tree *term, typeExpression left_type)
+bool verifyTerm(Parse_Tree *term, typeExpression left_type, char *operator)
 {
 	err.line_num = term->line_num;
 	strcpy(err.statement_type, "assignment");
@@ -495,6 +513,7 @@ bool verifyTerm(Parse_Tree *term, typeExpression left_type)
 	Parse_Tree *itr = term;
 	typeExpression identifier_type;
 	char trail_name[MAX_NAME_LEN], trail_operator[MAX_NAME_LEN], trail_type[MAX_NAME_LEN];
+	strcpy(trail_operator, operator);
 	if (strcmp(left_type.expression.typeName, "boolean") == 0)
 	{
 		while (itr->num_of_children == 3)
@@ -541,6 +560,13 @@ bool verifyTerm(Parse_Tree *term, typeExpression left_type)
 	}
 	else if (strcmp(left_type.expression.typeName, "integer") == 0)
 	{
+		if (itr->children[0]->num_of_children == 0)
+		{
+			identifier_type = findType(itr->children[0]);
+			strcpy(trail_name, identifier_type.name);
+			strcpy(trail_type, identifier_type.expression.typeName);
+		}
+
 		while (itr->num_of_children == 3)
 		{
 			identifier_type = findType(itr->children[0]);
@@ -550,20 +576,17 @@ bool verifyTerm(Parse_Tree *term, typeExpression left_type)
 
 			if (strcmp(identifier_type.expression.typeName, "integer") != 0 || strcmp(itr->children[1]->children[0]->value, "/") == 0)
 			{
-				printf("error \t%s\n", itr->children[0]->value);
 				err.depth = itr->depth;
-				strcpy(err.message, "type_error");
+				strcpy(err.message, "type error");
 				strcpy(err.operator, itr->children[1]->children[0]->value);
 
 				strcpy(err.first_lex, identifier_type.name);
 				strcpy(err.first_type, identifier_type.expression.typeName);
 
 				identifier_type = findType(itr->children[2]->children[0]);
-				printf("%s\n", itr->children[0]->value);
 				strcpy(err.second_lex, identifier_type.name);
 				strcpy(err.second_type, identifier_type.expression.typeName);
 
-				printf("error detected\n");
 				printError(err);
 				return true;
 			}
@@ -578,7 +601,6 @@ bool verifyTerm(Parse_Tree *term, typeExpression left_type)
 			strcpy(err.first_lex, trail_name);
 			strcpy(err.first_type, trail_type);
 
-			printf("%s\n", itr->children[0]->value);
 			strcpy(err.second_lex, identifier_type.name);
 			strcpy(err.second_type, identifier_type.expression.typeName);
 			printError(err);
@@ -587,6 +609,13 @@ bool verifyTerm(Parse_Tree *term, typeExpression left_type)
 	}
 	else if (strcmp(left_type.expression.typeName, "real") == 0)
 	{
+		if (itr->children[0]->num_of_children == 0)
+		{
+			identifier_type = findType(itr->children[0]);
+			strcpy(trail_name, identifier_type.name);
+			strcpy(trail_type, identifier_type.expression.typeName);
+		}
+		
 		while (itr->num_of_children == 3)
 		{
 			identifier_type = findType(itr->children[0]);
@@ -599,7 +628,7 @@ bool verifyTerm(Parse_Tree *term, typeExpression left_type)
 				if (strcmp(identifier_type.expression.typeName, "integer") != 0 || strcmp(itr->children[1]->children[0]->value, "/") != 0)
 				{
 					err.depth = itr->depth;
-					strcpy(err.message, "type_error");
+					strcpy(err.message, "type error");
 					strcpy(err.operator, itr->children[1]->children[0]->value);
 
 					strcpy(err.first_lex, identifier_type.name);
