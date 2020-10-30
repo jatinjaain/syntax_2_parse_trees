@@ -27,6 +27,7 @@ int main()
 
 	while (1)
 	{
+		num_of_identifiers = 0;
 		printf("\nEnter option: ");
 		scanf("%d", &option);
 		getchar();
@@ -44,6 +45,10 @@ int main()
 			break;
 		case 2:
 			//tranverse parse trees and report errors
+			G = readGrammar("grammar.txt", G);
+			f = fopen("./sourcecode.txt", "r");
+			stream = tokenizer(f);
+			pt = createParseTree(stream, &G);
 			traverseParseTree(pt);
 			break;
 		case 3:
@@ -52,10 +57,15 @@ int main()
 			f = fopen("./sourcecode.txt", "r");
 			stream = tokenizer(f);
 			pt = createParseTree(stream, &G);
-			printParseTree(pt, 0);
+			printParseTree(pt);
 			break;
 		case 4:
 			//print type expression table
+			G = readGrammar("grammar.txt", G);
+			f = fopen("./sourcecode.txt", "r");
+			stream = tokenizer(f);
+			pt = createParseTree(stream, &G);
+			traverseParseTree(pt);
 			printTypeExpressionTable();
 			break;
 		case 5:
@@ -74,6 +84,7 @@ int main()
 			printf("Wrong option.\n");
 			break;
 		}
+		fclose(f);
 	}
 }
 

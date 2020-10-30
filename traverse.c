@@ -44,7 +44,7 @@ void traverseParseTree(Parse_Tree *statements)
 		}
 		else if (isAssignment(statements->children[i]))
 		{
-			printf("assignment\n");
+			// printf("assignment\n");
 			checkAssignment(statements->children[i]->children[0]);
 		}
 		
